@@ -1,4 +1,4 @@
-import { Response} from "express";
+import {Request, Response} from "express";
 import {AuthRequest} from "../middleware/auth";
 // @ts-ignore
 import { taskService } from "../services/taskService";
@@ -13,6 +13,17 @@ export const taskController = {
         }
     },
 
+    update: async (req: Request, res: Response) => {
+        try {
+            const {taskId} = req.params;
+            const {status} = req.body;
+            const updated = await taskService.updateStatus(taskId, status);
+            res.status(200).json(updated);
+        } catch (error: any) {
+            res.status(400).json({message: (error as Error).message});
+        }
+    },
+
     getTasks: async (req: AuthRequest, res: Response) => {
         try {
             const tasks = await taskService.getAll(req.user.id);
@@ -21,4 +32,14 @@ export const taskController = {
             res.status(400).json({message: (error as Error).message});
         }
     },
+
+    delete: async (req: Request, res: Response) => {
+        try{
+            const {taskId} = req.params;
+            const deleted = await taskService.softDelete(taskId);
+            res.status(200).json(deleted);
+        } catch (error: any) {
+            res.status(400).json({message: (error as Error).message});
+        }
+    }
 };
