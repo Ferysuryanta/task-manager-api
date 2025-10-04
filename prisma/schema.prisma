@@ -27,6 +27,7 @@ model Task {
   description String?
   status      String    @default("todo")
   dueDate     DateTime?
+  dueDateStr  String?
   userId      String
   createdAt   DateTime  @default(now())
   User        User      @relation(fields: [userId], references: [id])
